@@ -76,18 +76,90 @@ int main() {
             int sOpt = inputInt("Lua chon: ");
             if (sOpt == 1) {
                 int targetId = inputInt("Nhap Ma SP can tim: ");
-                // [HOOK] Goi BinarySearchByID hoac SentinelSearchByID tai day
-                int idx = findProductIndexByID(catalog, n, targetId);
-                if (idx != -1)
-                    cout << "Tim thay tai chi so [" << idx << "]: " << catalog[idx].name
-                         << " | Gia: " << fixed << setprecision(0) << catalog[idx].price
-                         << "d | Ton: " << catalog[idx].stock << "\n";
-                else
-                    cout << "Khong tim thay san pham co ID = " << targetId << "\n";
-            } else {
+
+                cout << "Chon thuat toan: (1) Binary Search | (2) Sentinel Search\n";
+                int method = inputInt("Lua chon: ");
+
+                int idx = -1;
+
+                if (method == 1) {
+                    // Tao ban sao va sap xep theo ID de Binary Search hoat dong dung
+                    Product sorted[MAX_CATALOG];
+
+                    for (int i = 0; i < n; i++) {
+                        sorted[i] = catalog[i];
+                    }
+
+                    for (int i = 1; i < n; i++) {
+                        Product key = sorted[i];
+                        int j = i - 1;
+
+                        while (j >= 0 && sorted[j].id > key.id) {
+                            sorted[j + 1] = sorted[j];
+                            j--;
+                        }
+
+                        sorted[j + 1] = key;
+                    }
+
+                    idx = binarySearchByID(sorted, n, targetId);
+
+                    if (idx != -1) {
+                        cout << "Tim thay: " << sorted[idx].name
+                             << " | Gia: " << fixed << setprecision(0)
+                             << sorted[idx].price
+                             << "d | Ton: " << sorted[idx].stock << "\n";
+                    } else {
+                        cout << "Khong tim thay san pham co ID = "
+                             << targetId << "\n";
+                    }
+                }
+                else if (method == 2) {
+                    idx = sentinelSearchByID(catalog, n, targetId);
+
+                    if (idx != -1) {
+                        cout << "Tim thay: " << catalog[idx].name
+                             << " | Gia: " << fixed << setprecision(0)
+                             << catalog[idx].price
+                             << "d | Ton: " << catalog[idx].stock << "\n";
+                    } else {
+                        cout << "Khong tim thay san pham co ID = "
+                             << targetId << "\n";
+                    }
+                }
+                else {
+                    cout << "Lua chon khong hop le!\n";
+                }
+            }
+            else if (sOpt == 2) {
                 string kw = inputString("Nhap tu khoa ten san pham: ");
-                // [HOOK] Goi SequentialSearchByName(catalog, n, kw) tai day
-                cout << "-> [DEMO KHUNG] Da nhan tu khoa tim kiem theo ten: \"" << kw << "\"\n";
+
+                int result[MAX_CATALOG];
+
+                int count = sequentialSearchByName(
+                    catalog, n, kw, result, MAX_CATALOG
+                );
+
+                if (count > 0) {
+                    cout << "Tim thay " << count << " san pham:\n";
+
+                    for (int i = 0; i < count; i++) {
+                        int idx = result[i];
+
+                        cout << "Tai chi so [" << idx << "]: "
+                             << catalog[idx].name
+                             << " | Gia: " << fixed << setprecision(0)
+                             << catalog[idx].price
+                             << "d | Ton: " << catalog[idx].stock << "\n";
+                    }
+                }
+                else {
+                    cout << "Khong tim thay san pham co ten chua: "
+                         << kw << "\n";
+                }
+            }
+            else {
+                cout << "Lua chon khong hop le!\n";
             }
         }
         else if (choice == 4) {

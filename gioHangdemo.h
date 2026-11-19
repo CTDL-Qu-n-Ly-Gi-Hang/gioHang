@@ -183,5 +183,7 @@ void destroyHashTable(VoucherHashTable& ht);
 
 // 4.7. Ham tra cuu mang dung chung (Phuc vu kiem tra ton kho khi Checkout)
 int findProductIndexByID(Product catalog[], int n, int productId);
-
+int binarySearchByID(Product a[], int n, int id);
+int sentinelSearchByID(Product a[], int n, int id);
+int sequentialSearchByName(Product a[], int n, const string& keyword, int result[], int maxResult);
 #endif // GIO_HANG_DEMO_H
