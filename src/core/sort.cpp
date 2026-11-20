@@ -1,16 +1,14 @@
 #include "gioHang.h"
 // Hoan doi hai san pham
-static void swapProduct(Product& a, Product& b) {
+void swapProduct(Product& a, Product& b) {
     Product temp = a;
     a = b;
     b = temp;
 }
 
-// ============================================================================
 // QUICK SORT - Sap xep tang dan theo Ma san pham (id)
-// ============================================================================
 
-static int partitionByID(Product catalog[], int low, int high) {
+int partitionByID(Product catalog[], int low, int high) {
     int pivot = catalog[high].id;
     int i = low - 1;
 
@@ -36,26 +34,28 @@ void quickSortByID(Product catalog[], int low, int high) {
     quickSortByID(catalog, pivotIndex + 1, high);
 }
 
-// ============================================================================
 // HEAP SORT - Sap xep tang dan theo Don gia (price)
-// ============================================================================
 
-static void heapifyByPrice(Product catalog[], int n, int root) {
-    int largest = root;
-    int left = 2 * root + 1;
-    int right = 2 * root + 2;
-
-    if (left < n && catalog[left].price > catalog[largest].price) {
-        largest = left;
-    }
-
-    if (right < n && catalog[right].price > catalog[largest].price) {
-        largest = right;
-    }
-
-    if (largest != root) {
+void heapifyByPrice(Product catalog[], int n, int root) {
+    while (true) {
+        int largest = root;
+        int left = 2 * root + 1;
+        int right = 2 * root + 2;
+    
+        if (left < n && catalog[left].price > catalog[largest].price) {
+            largest = left;
+        }
+    
+        if (right < n && catalog[right].price > catalog[largest].price) {
+            largest = right;
+        }
+    
+        if (largest == root) {
+            return;
+        }
+        
         swapProduct(catalog[root], catalog[largest]);
-        heapifyByPrice(catalog, n, largest);
+        root = largest;
     }
 }
 
@@ -76,9 +76,7 @@ void heapSortByPrice(Product catalog[], int n) {
     }
 }
 
-// ============================================================================
 // INSERTION SORT - Sap xep tang dan theo Ton kho (stock)
-// ============================================================================
 
 void insertionSortByStock(Product catalog[], int n) {
     if (catalog == nullptr || n <= 1) {
